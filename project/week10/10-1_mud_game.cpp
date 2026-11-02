@@ -1,344 +1,227 @@
 #include <iostream>
-
 #include <string>
-
 using namespace std;
 
 const int mapX = 5;
-
 const int mapY = 5;
 
-int HP = 20;
+int HP = 20 ; 
 
-// »ç¿ëÀÚ Á¤ÀÇ ÇÔ¼ö
-
+// ì‚¬ìš©ì ì •ì˜ í•¨ìˆ˜
 bool checkXY(int user_x, int mapX, int user_y, int mapY);
-
 void displayMap(int map[][mapX], int user_x, int user_y);
-
 bool checkGoal(int map[][mapX], int user_x, int user_y);
 
-// ¸ŞÀÎ  ÇÔ¼ö
+// í˜„ì¬ ìœ„ì¹˜ì´ì˜ ì•„ì´í…œ, ì , í¬ì…˜ í™•ì¸í•˜ëŠ” í•¨ìˆ˜
+void checkState(int map[][mapX], int user_x, int user_y);
 
-int main()
-{
+// ë©”ì¸  í•¨ìˆ˜
+int main() {
+	// 0ì€ ë¹ˆ ê³µê°„, 1ì€ ì•„ì´í…œ, 2ëŠ” ì , 3ì€ í¬ì…˜, 4ëŠ” ëª©ì ì§€
+	int map[mapY][mapX] = { {0, 1, 2, 0, 4},
+					{1, 0, 0, 2, 0},
+					{0, 0, 0, 0, 0},
+					{0, 2, 3, 0, 0},
+					{3, 0, 0, 0, 2} };
 
-	// 0Àº ºó °ø°£, 1Àº ¾ÆÀÌÅÛ, 2´Â Àû, 3Àº Æ÷¼Ç, 4´Â ¸ñÀûÁö
 
-	int map[mapY][mapX] = {{0, 1, 2, 0, 4},
+	// ìœ ì €ì˜ ìœ„ì¹˜ë¥¼ ì €ì¥í•  ë³€ìˆ˜
+	int user_x = 0; // ê°€ë¡œ ë²ˆí˜¸
+	int user_y = 0; // ì„¸ë¡œ ë²ˆí˜¸
 
-						   {1, 0, 0, 2, 0},
+	// ê²Œì„ ì‹œì‘ 
+	while (1) { // ì‚¬ìš©ìì—ê²Œ ê³„ì† ì…ë ¥ë°›ê¸° ìœ„í•´ ë¬´í•œ ë£¨í”„
 
-						   {0, 0, 0, 0, 0},
-
-						   {0, 2, 3, 0, 0},
-
-						   {3, 0, 0, 0, 2}};
-
-	// À¯ÀúÀÇ À§Ä¡¸¦ ÀúÀåÇÒ º¯¼ö
-
-	int user_x = 0; // °¡·Î ¹øÈ£
-
-	int user_y = 0; // ¼¼·Î ¹øÈ£
-
-	// °ÔÀÓ ½ÃÀÛ
-
-	while (1)
-	{ // »ç¿ëÀÚ¿¡°Ô °è¼Ó ÀÔ·Â¹Ş±â À§ÇØ ¹«ÇÑ ·çÇÁ
-
-		// »ç¿ëÀÚÀÇ ÀÔ·ÂÀ» ÀúÀåÇÒ º¯¼ö
-
+		// ì‚¬ìš©ìì˜ ì…ë ¥ì„ ì €ì¥í•  ë³€ìˆ˜
 		string user_input = "";
 
-		cout << "¸í·É¾î¸¦ ÀÔ·ÂÇÏ¼¼¿ä (»ó,ÇÏ,ÁÂ,¿ì,Áöµµ,Á¾·á): ";
-
+		cout << "í˜„ì¬ HP: " << HP << " ";
+		cout << "ëª…ë ¹ì–´ë¥¼ ì…ë ¥í•˜ì„¸ìš” (ìƒ,í•˜,ì¢Œ,ìš°,ì§€ë„,ì¢…ë£Œ): ";
 		cin >> user_input;
 
-		if (user_input == "»ó")
-		{
-
-			// À§·Î ÇÑ Ä­ ¿Ã¶ó°¡±â
-
-			user_y -= 1; // ¹è¿­ ±âÁØÀ¸·Î ÇØ¼­ yÁÂÇ¥´Â À§·Î ¿Ã¶ó°¡¸é -1, ¾Æ·¡·Î ³»·Á°¡¸é +1
-
+		if (user_input == "ìƒ") {
+			// ìœ„ë¡œ í•œ ì¹¸ ì˜¬ë¼ê°€ê¸°
+			user_y -= 1;
 			bool inMap = checkXY(user_x, mapX, user_y, mapY);
-
-			if (inMap == false)
-			{
-
-				cout << "¸ÊÀ» ¹ş¾î³µ½À´Ï´Ù. ´Ù½Ã µ¹¾Æ°©´Ï´Ù." << endl;
-
+			if (inMap == false) {
+				cout << "ë§µì„ ë²—ì–´ë‚¬ìŠµë‹ˆë‹¤. ë‹¤ì‹œ ëŒì•„ê°‘ë‹ˆë‹¤." << endl;
 				user_y += 1;
 			}
-
-			else
-			{
-
-				cout << "À§·Î ÇÑ Ä­ ¿Ã¶ó°©´Ï´Ù." << endl;
-
+			else {
+				cout << "ìœ„ë¡œ í•œ ì¹¸ ì˜¬ë¼ê°‘ë‹ˆë‹¤." << endl;
 				displayMap(map, user_x, user_y);
 
-				HP = HP - 1;
-				cout << "ÇöÀç HP: " << HP << endl;
-				if(HP == 0 ){
-					cout << "½ÇÆĞ" << endl;
-					break;
+				HP = HP -1 ; 
+
+				if(HP > 0){
+					checkState(map, user_x, user_y);
 				}
 			}
-			// 0Àº ºó °ø°£, 1Àº ¾ÆÀÌÅÛ, 2´Â Àû, 3Àº Æ÷¼Ç, 4´Â ¸ñÀûÁö
-
-			if(map[user_y][user_x] == 0){
-				continue;
-			}
-			else if(map[user_y][user_x] == 1){
-				cout << "¾ÆÀÌÅÛÀ» ¾ò¾ú½À´Ï´Ù." << endl;
-				map[user_y][user_x] = 0;
-			}
-			else if(map[user_y][user_x] == 2){
-				cout << "ÀûÀÌ ÀÖ½À´Ï´Ù. HP°¡ 2 ÁÙ¾îµì´Ï´Ù." << endl;
-				HP = HP - 2;
-				cout << "ÇöÀç HP : " << HP;
-			}
-			else if(map[user_y][user_x] == 3){
-				cout << "Æ÷¼ÇÀÌ ÀÖ½À´Ï´Ù" << endl;
-				HP = HP + 2;
-				cout << "Æ÷¼ÇÀ» ¸Ô¾ú½À´Ï´Ù. HP°¡ 2 Áõ°¡ÇÏ¿© ÇöÀç HP : " << HP;			
-			}
 		}
-
-		else if (user_input == "ÇÏ")
-		{
-
-			// TODO: ¾Æ·¡·Î ÇÑ Ä­ ³»·Á°¡±â
-
+		else if (user_input == "í•˜") {
+			// TODO: ì•„ë˜ë¡œ í•œ ì¹¸ ë‚´ë ¤ê°€ê¸°
 			user_y += 1;
-
 			bool inMap = checkXY(user_x, mapX, user_y, mapY);
-
-			if (inMap == false)
-			{
-
-				cout << "¸ÊÀ» ¹ş¾î³µ½À´Ï´Ù. ´Ù½Ã µ¹¾Æ°©´Ï´Ù." << endl;
-
+			if (inMap == false) {
+				cout << "ë§µì„ ë²—ì–´ë‚¬ìŠµë‹ˆë‹¤. ë‹¤ì‹œ ëŒì•„ê°‘ë‹ˆë‹¤." << endl;
 				user_y -= 1;
 			}
-
-			else
-			{
-
-				cout << "À§·Î ÇÑ Ä­ ³»·Á°©´Ï´Ù." << endl;
-
+			else {
+				cout << "ìœ„ë¡œ í•œ ì¹¸ ë‚´ë ¤ê°‘ë‹ˆë‹¤." << endl;
 				displayMap(map, user_x, user_y);
 
 				HP = HP - 1;
-				cout << "ÇöÀç HP: " << HP << endl;
-				if(HP == 0 ){
-					cout << "HP°¡ 0 ÀÌÇÏ°¡ µÇ¾ú½À´Ï´Ù. ½ÇÆĞÇß½À´Ï´Ù." << endl << "°ÔÀÓÀ» Á¾·áÇÕ´Ï´Ù." << endl;
-					break;
+
+				if(HP > 0){
+					checkState(map, user_x, user_y);
 				}
 			}
 		}
-
-		else if (user_input == "ÁÂ")
-		{
-
-			// TODO: ¿ŞÂÊÀ¸·Î ÀÌµ¿ÇÏ±â
-
+		else if (user_input == "ì¢Œ") {
+			// TODO: ì™¼ìª½ìœ¼ë¡œ ì´ë™í•˜ê¸°
 			user_x -= 1;
-
 			bool inMap = checkXY(user_x, mapX, user_y, mapY);
 
-			if (inMap == false)
-			{
-
-				cout << "¸ÊÀ» ¹ş¾î³µ½À´Ï´Ù. ´Ù½Ã µ¹¾Æ°©´Ï´Ù." << endl;
-
+			if (inMap == false) {
+				cout << "ë§µì„ ë²—ì–´ë‚¬ìŠµë‹ˆë‹¤. ë‹¤ì‹œ ëŒì•„ê°‘ë‹ˆë‹¤." << endl;
 				user_x += 1;
 			}
-
-			else
-			{
-
-				cout << "¿ŞÂÊÀ¸·Î ÀÌµ¿ÇÕ´Ï´Ù." << endl;
-
+			else {
+				cout << "ì™¼ìª½ìœ¼ë¡œ ì´ë™í•©ë‹ˆë‹¤." << endl;
 				displayMap(map, user_x, user_y);
 
-				HP = HP - 1;
-				cout << "ÇöÀç HP: " << HP << endl;
-				if(HP == 0 ){
-					cout << "HP°¡ 0 ÀÌÇÏ°¡ µÇ¾ú½À´Ï´Ù. ½ÇÆĞÇß½À´Ï´Ù." << endl << "°ÔÀÓÀ» Á¾·áÇÕ´Ï´Ù." << endl;
-					break;
+				HP = HP - 1 ;
+
+				if(HP > 0){
+					checkState(map, user_x, user_y);
 				}
 			}
 		}
-
-		else if (user_input == "¿ì")
-		{
-
-			// TODO: ¿À¸¥ÂÊÀ¸·Î ÀÌµ¿ÇÏ±â
-
+		else if (user_input == "ìš°") {
+			// TODO: ì˜¤ë¥¸ìª½ìœ¼ë¡œ ì´ë™í•˜ê¸°
 			user_x += 1;
-
 			bool inMap = checkXY(user_x, mapX, user_y, mapY);
-
-			if (inMap == false)
-			{
-
-				cout << "¸ÊÀ» ¹ş¾î³µ½À´Ï´Ù. ´Ù½Ã µ¹¾Æ°©´Ï´Ù." << endl;
-
+			if (inMap == false) {
+				cout << "ë§µì„ ë²—ì–´ë‚¬ìŠµë‹ˆë‹¤. ë‹¤ì‹œ ëŒì•„ê°‘ë‹ˆë‹¤." << endl;
 				user_x -= 1;
 			}
-
-			else
-			{
-
-				cout << "¿À¸¥ÂÊÀ¸·Î ÀÌµ¿ÇÕ´Ï´Ù." << endl;
-
+			else {
+				cout << "ì˜¤ë¥¸ìª½ìœ¼ë¡œ ì´ë™í•©ë‹ˆë‹¤." << endl;
 				displayMap(map, user_x, user_y);
 
 				HP = HP - 1;
-				cout << "ÇöÀç HP: " << HP << endl;
-				if(HP == 0 ){
-					cout << "HP°¡ 0 ÀÌÇÏ°¡ µÇ¾ú½À´Ï´Ù. ½ÇÆĞÇß½À´Ï´Ù." << endl << "°ÔÀÓÀ» Á¾·áÇÕ´Ï´Ù." << endl;
-					break;
+
+				if(HP > 0){
+					checkState(map, user_x, user_y);
 				}
 			}
 		}
-
-		else if (user_input == "Áöµµ")
-		{
-
-			// TODO: Áöµµ º¸¿©ÁÖ±â ÇÔ¼ö È£Ãâ
-
+		else if (user_input == "ì§€ë„") {
+			// TODO: ì§€ë„ ë³´ì—¬ì£¼ê¸° í•¨ìˆ˜ í˜¸ì¶œ
 			displayMap(map, user_x, user_y);
 		}
-
-		else if (user_input == "Á¾·á")
-		{
-
-			cout << "Á¾·áÇÕ´Ï´Ù.";
-
+		else if (user_input == "ì¢…ë£Œ") {
+			cout << "ì¢…ë£Œí•©ë‹ˆë‹¤.";
 			break;
 		}
-
-		else
-		{
-
-			cout << "Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù." << endl;
-
+		else {
+			cout << "ì˜ëª»ëœ ì…ë ¥ì…ë‹ˆë‹¤." << endl;
 			continue;
 		}
 
-		// ¸ñÀûÁö¿¡ µµ´ŞÇß´ÂÁö Ã¼Å©
-
-		bool finish = checkGoal(map, user_x, user_y);
-
-		if (finish == true)
-		{
-
-			cout << "¸ñÀûÁö¿¡ µµÂøÇß½À´Ï´Ù! ÃàÇÏÇÕ´Ï´Ù!" << endl;
-
-			cout << "°ÔÀÓÀ» Á¾·áÇÕ´Ï´Ù." << endl;
-
+		if (HP <= 0){
+			cout << "HPê°€ 0ì´í•˜ê°€ ë˜ì—ˆìŠµë‹ˆë‹¤. ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤. " << endl;
+			cout << "ê²Œì„ì„ ì¢…ë£Œí•©ë‹ˆë‹¤." << endl;
 			break;
 		}
-	}
 
+
+		// ëª©ì ì§€ì— ë„ë‹¬í–ˆëŠ”ì§€ ì²´í¬
+		bool finish = checkGoal(map, user_x, user_y);
+		if (finish == true) {
+			cout << "ëª©ì ì§€ì— ë„ì°©í–ˆìŠµë‹ˆë‹¤! ì¶•í•˜í•©ë‹ˆë‹¤!" << endl;
+			cout << "ê²Œì„ì„ ì¢…ë£Œí•©ë‹ˆë‹¤." << endl;
+			break;
+		}
+
+	}
 	return 0;
 }
 
-// Áöµµ¿Í »ç¿ëÀÚ À§Ä¡ Ãâ·ÂÇÏ´Â ÇÔ¼ö
 
-void displayMap(int map[][mapX], int user_x, int user_y)
-{
-
-	for (int i = 0; i < mapY; i++)
-	{
-
-		for (int j = 0; j < mapX; j++)
-		{
-
-			if (i == user_y && j == user_x)
-			{
-
-				cout << " USER |"; // ¾ç ¿· 1Ä­ °ø¹é
+// ì§€ë„ì™€ ì‚¬ìš©ì ìœ„ì¹˜ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜
+void displayMap(int map[][mapX], int user_x, int user_y) {
+	for (int i = 0; i < mapY; i++) {
+		for (int j = 0; j < mapX; j++) {
+			if (i == user_y && j == user_x) {
+				cout << " USER |"; // ì–‘ ì˜† 1ì¹¸ ê³µë°±
 			}
-
-			else
-			{
-
+			else {
 				int posState = map[i][j];
-
-				switch (posState)
-				{
-
+				switch (posState) {
 				case 0:
-
-					cout << "      |"; // 6Ä­ °ø¹é
-
+					cout << "      |"; // 6ì¹¸ ê³µë°±
 					break;
-
 				case 1:
-
-					cout << "¾ÆÀÌÅÛ|";
-
+					cout << "ì•„ì´í…œ|";
 					break;
-
 				case 2:
-
-					cout << "  Àû  |"; // ¾ç ¿· 2Ä­ °ø¹é
-
+					cout << "  ì   |"; // ì–‘ ì˜† 2ì¹¸ ê³µë°±
 					break;
-
 				case 3:
-
-					cout << " Æ÷¼Ç |"; // ¾ç ¿· 1Ä­ °ø¹é
-
+					cout << " í¬ì…˜ |"; // ì–‘ ì˜† 1ì¹¸ ê³µë°±
 					break;
-
 				case 4:
-
-					cout << "¸ñÀûÁö|";
-
+					cout << "ëª©ì ì§€|";
 					break;
 				}
 			}
 		}
-
 		cout << endl;
-
 		cout << " -------------------------------- " << endl;
 	}
 }
 
-// ÀÌµ¿ÇÏ·Á´Â °÷ÀÌ À¯È¿ÇÑ ÁÂÇ¥ÀÎÁö Ã¼Å©ÇÏ´Â ÇÔ¼ö
-
-bool checkXY(int user_x, int mapX, int user_y, int mapY)
-{
-
+// ì´ë™í•˜ë ¤ëŠ” ê³³ì´ ìœ íš¨í•œ ì¢Œí‘œì¸ì§€ ì²´í¬í•˜ëŠ” í•¨ìˆ˜
+bool checkXY(int user_x, int mapX, int user_y, int mapY) {
 	bool checkFlag = false;
-
-	if (user_x >= 0 && user_x < mapX && user_y >= 0 && user_y < mapY)
-	{
-
+	if (user_x >= 0 && user_x < mapX && user_y >= 0 && user_y < mapY) {
 		checkFlag = true;
 	}
-
 	return checkFlag;
 }
 
-// À¯ÀúÀÇ À§Ä¡°¡ ¸ñÀûÁöÀÎÁö Ã¼Å©ÇÏ´Â ÇÔ¼ö
-
-bool checkGoal(int map[][mapX], int user_x, int user_y)
-{
-
-	// ¸ñÀûÁö µµÂøÇÏ¸é
-
-	if (map[user_y][user_x] == 4)
-	{
-
+// ìœ ì €ì˜ ìœ„ì¹˜ê°€ ëª©ì ì§€ì¸ì§€ ì²´í¬í•˜ëŠ” í•¨ìˆ˜
+bool checkGoal(int map[][mapX], int user_x, int user_y) {
+	// ëª©ì ì§€ ë„ì°©í•˜ë©´
+	if (map[user_y][user_x] == 4) {
 		return true;
 	}
-
 	return false;
+}
+
+// í˜„ì¬ ìœ„ì¹˜ì´ì˜ ì•„ì´í…œ, ì , í¬ì…˜ í™•ì¸í•˜ëŠ” í•¨ìˆ˜
+void checkState(int map[][mapX], int user_x, int user_y) {
+	int place = map[user_y][user_x];
+	switch (place) {
+		case 0 :
+			break;
+		case 1 :
+			cout << "ì•„ì´í…œì´ ìˆìŠµë‹ˆë‹¤." << endl;
+			break;
+		case 2 : 
+			cout << "ì ì´ ìˆìŠµë‹ˆë‹¤." << endl;
+			HP = HP - 2;
+
+			cout << "HPê°€ 2 ê°ì†Œí–ˆìŠµë‹ˆë‹¤." << endl;
+			cout << "í˜„ì¬ HP : " << HP << endl;
+			break;
+		case 3 :
+			cout << "í¬ì…˜ì´ ìˆìŠµë‹ˆë‹¤." << endl;
+			HP = HP + 2;
+
+			cout << "HPê°€ 2 ì¦ê°€í•˜ì˜€ìŠµë‹ˆë‹¤." << endl;
+			cout << "í˜„ì¬ HP : " << HP << endl;
+			break;
+	}
 }
