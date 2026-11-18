@@ -16,6 +16,7 @@ void User::DecreaseHP(int dec_hp){
 
 int User::GetHP(){
     return hp;
+    itemCnt = 0 ; 
 }
 
 // 아이템 증가 함수

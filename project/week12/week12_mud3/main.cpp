@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <string>
 #include "user.h"
@@ -19,8 +20,7 @@ void checkState(vector<vector<int>> &map, int user_x, int user_y, User &user);
 bool CheckUser(User user);
 
 // Magician과 Warrior가 번갈아 가며 게임
-int Order = 0 ;
-
+int Order = 0;
 
 // 메인 함수
 int main()
@@ -35,15 +35,30 @@ int main()
 
     // 객체 생성
     Magician magician;
-    Warrior warrior ;
+    Warrior warrior;
+
+    int k = 0;
     // 유저의 위치를 저장할 변수
     int user_x = 0; // 가로 번호
     int user_y = 0; // 세로 번호
     while (1)
     { // 사용자에게 계속 입력받기 위해 무한 루프
+        // 번갈아 가기
+        if (k == 0)
+        {
+            cout << "Warrior -> " << endl;
+            cout << "현재 HP: " << warrior.GetHP() << endl;
+            warrior.doAttack();
+        }
+        else
+        {
+            cout << "Magician -> " << endl;
+            cout << "현재 HP: " << magician.GetHP() << endl;
+            magician.doAttack();
+        }
+
         // 사용자의 입력을 저장할 변수
         string user_input = "";
-        cout << "현재 HP: " << user.GetHP() << " ";
         cout << "명령어를 입력하세요 (상,하,좌,우,지도,정보,종료): ";
         cin >> user_input;
 
@@ -62,11 +77,23 @@ int main()
                 cout << "위로 한 칸 올라갑니다." << endl;
                 displayMap(map, user_x, user_y);
 
-                user.DecreaseHP(1);
-
-                if (CheckUser(user)) // hp != 0 이면 실행
+                if (k == 0)
                 {
-                    checkState(map, user_x, user_y, user);
+                    warrior.DecreaseHP(1);
+
+                    if (CheckUser(warrior)) // hp != 0 이면 실행
+                    {
+                        checkState(map, user_x, user_y, warrior);
+                    }
+                }
+                else
+                {
+                    magician.DecreaseHP(1);
+
+                    if (CheckUser(magician))
+                    {
+                        checkState(map, user_x, user_y, magician);
+                    }
                 }
             }
         }
@@ -85,11 +112,23 @@ int main()
                 cout << "위로 한 칸 내려갑니다." << endl;
                 displayMap(map, user_x, user_y);
 
-                user.DecreaseHP(1);
-
-                if (CheckUser(user))
+                if (k == 0)
                 {
-                    checkState(map, user_x, user_y, user);
+                    warrior.DecreaseHP(1);
+
+                    if (CheckUser(warrior))
+                    {
+                        checkState(map, user_x, user_y, warrior);
+                    }
+                }
+                else
+                {
+                    magician.DecreaseHP(1);
+
+                    if (CheckUser(magician))
+                    {
+                        checkState(map, user_x, user_y, magician);
+                    }
                 }
             }
         }
@@ -109,11 +148,23 @@ int main()
                 cout << "왼쪽으로 이동합니다." << endl;
                 displayMap(map, user_x, user_y);
 
-                user.DecreaseHP(1);
-
-                if (CheckUser(user))
+                if (k == 0)
                 {
-                    checkState(map, user_x, user_y, user);
+                    warrior.DecreaseHP(1);
+
+                    if (CheckUser(warrior))
+                    {
+                        checkState(map, user_x, user_y, warrior);
+                    }
+                }
+                else
+                {
+                    magician.DecreaseHP(1);
+
+                    if (CheckUser(magician))
+                    {
+                        checkState(map, user_x, user_y, magician);
+                    }
                 }
             }
         }
@@ -132,11 +183,23 @@ int main()
                 cout << "오른쪽으로 이동합니다." << endl;
                 displayMap(map, user_x, user_y);
 
-                user.DecreaseHP(1);
-
-                if (CheckUser(user))
+                if (k == 0)
                 {
-                    checkState(map, user_x, user_y, user);
+                    warrior.DecreaseHP(1);
+
+                    if (CheckUser(warrior))
+                    {
+                        checkState(map, user_x, user_y, warrior);
+                    }
+                }
+                else
+                {
+                    magician.DecreaseHP(1);
+
+                    if (CheckUser(magician))
+                    {
+                        checkState(map, user_x, user_y, magician);
+                    }
                 }
             }
         }
@@ -146,7 +209,14 @@ int main()
         }
         else if (user_input == "정보")
         {
-            cout << user << endl;
+            if (k == 0)
+            {
+                cout << warrior << endl;
+            }
+            else
+            {
+                cout << magician << endl;
+            }
         }
         else if (user_input == "종료")
         {
@@ -159,13 +229,14 @@ int main()
             continue;
         }
 
-        if (CheckUser(user) == false)
+        if ((k == 0 && CheckUser(warrior) == false) ||
+            (k == 1 && CheckUser(magician) == false))
         {
             cout << "HP가 0이하가 되었습니다. 실패했습니다. " << endl;
             cout << "게임을 종료합니다." << endl;
             break;
         }
-        
+
         // 목적지에 도달했는지 체크
         bool finish = checkGoal(map, user_x, user_y);
         if (finish == true)
@@ -174,12 +245,14 @@ int main()
             cout << "게임을 종료합니다." << endl;
             break;
         }
+
+        k = (k + 1) % 2;
     }
     return 0;
 }
 
 // 지도와 사용자 위치 출력하는 함수
-void displayMap(vector<vector<int>>& map, int user_x, int user_y)
+void displayMap(vector<vector<int>> &map, int user_x, int user_y)
 {
     for (int i = 0; i < mapY; i++)
     {
@@ -229,7 +302,7 @@ bool checkXY(int user_x, int mapX, int user_y, int mapY)
 }
 
 // 유저의 위치가 목적지인지 체크하는 함수
-bool checkGoal(vector<vector<int>>& map, int user_x, int user_y)
+bool checkGoal(vector<vector<int>> &map, int user_x, int user_y)
 {
     // 목적지 도착하면
     if (map[user_y][user_x] == 4)
@@ -240,7 +313,7 @@ bool checkGoal(vector<vector<int>>& map, int user_x, int user_y)
 }
 
 // 현재 위치이의 아이템, 적, 포션 확인하는 함수
-void checkState(vector<vector<int>>& map, int user_x, int user_y, User& user)
+void checkState(vector<vector<int>> &map, int user_x, int user_y, User &user)
 {
     int place = map[user_y][user_x];
     switch (place)
