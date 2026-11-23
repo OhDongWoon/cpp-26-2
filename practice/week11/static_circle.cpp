@@ -22,3 +22,19 @@ public:
     }
 };
 int Circle::count = 0;
+
+int main()
+{
+    cout << "지금까지생성된원의개수= " << Circle::getCount() << endl;
+    Circle c1;
+    cout << "지금까지생성된원의개수= " << Circle::count << endl;
+    cout << "지금까지생성된원의개수= " << c1.count << endl;
+    cout << "지금까지생성된원의개수= " << Circle::getCount() << endl;
+    cout << "지금까지생성된원의개수= " << c1.getCount() << endl;
+    Circle c2(100, 100, 30);
+    cout << "지금까지생성된원의개수= " << Circle::count << endl;
+    cout << "지금까지생성된원의개수= " << c2.count << endl;
+    cout << "지금까지생성된원의개수= " << Circle::getCount() << endl;
+    cout << "지금까지생성된원의개수= " << c2.getCount() << endl;
+    return 0;
+}
