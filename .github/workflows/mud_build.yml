@@ -1,11 +1,10 @@
-
 name: Run mud_actions_test
 
 on:
   push:
     paths:
       - 'practice/week13/actions_test/**'
-      - '.github/workflows/build.yml'
+      - '.github/workflows/mud_build.yml'
   workflow_dispatch:
 
 permissions:
@@ -14,10 +13,8 @@ permissions:
 jobs:
   run-example:
     runs-on: windows-latest
-
     steps:
       - uses: actions/checkout@v6
-
       - uses: msys2/setup-msys2@v2
         with:
           msystem: UCRT64
