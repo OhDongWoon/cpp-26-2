@@ -3,30 +3,46 @@
 using namespace std;
 
 class User {
-private :
-    int hp ;
-    int itemCnt;
-public :
-    User() ;
-    void IncreaseHP(int inc_hp);
-    void DecreaseHP(int dec_hp);
-    int GetHP() ;
-    void IncreaseItem(); // 아이템 증가 함수
-    friend ostream& operator<<(ostream& os , const User& user);
-    void doAttack();
+public : 
+    virtual void IncreaseHP(int inc_hp) = 0 ;
+    virtual void DecreaseHP(int dec_hp) = 0 ; 
+    virtual int GetHP() = 0 ; 
+    virtual void IncreaseItem() = 0 ; 
+    virtual int GetItemCount() = 0 ; 
+    virtual void doAttack() = 0 ; 
+
+    virtual ~User() {}
 };
 
 // User 클래스를 상속받는 Magician과 Warrior클래스 만들기
 class Magician : public User {
+private :
+    int hp ;
+    int itemCnt;
+
 public :
-    void doAttack(){
-        cout << "마법 사용";
-    }
+    Magician() ;
+    void IncreaseHP(int inc_hp) override ;
+    void DecreaseHP(int dec_hp) override ;
+    int GetHP() override;
+    void IncreaseItem() override;
+    int GetItemCount() override;
+    void doAttack() override;
 };
 
 class Warrior : public User {
+private :
+    int hp ;
+    int itemCnt;
+
 public :
-    void doAttack(){
-        cout << "베기 사용" ;
-    }
+    Warrior() ; 
+    void IncreaseHP(int inc_hp) override;
+    void DecreaseHP(int dec_hp) override ; 
+    int GetHP() override ;
+    void IncreaseItem() override ;
+    int GetItemCount() override ; 
+    void doAttack() override ; 
 };
+
+ostream& operator<<(ostream& os, User& user);

@@ -2,35 +2,83 @@
 #include <string>
 #include "user.h"
 using namespace std;
-User::User(){
-    hp = 20 ;
+
+Magician::Magician()
+{
+    hp = 20;
+    itemCnt = 0;
 }
 
-void User::IncreaseHP(int inc_hp){
+void Magician::IncreaseHP(int inc_hp)
+{
     hp = hp + inc_hp;
 }
 
-void User::DecreaseHP(int dec_hp){
+void Magician::DecreaseHP(int dec_hp)
+{
     hp = hp - dec_hp;
 }
 
-int User::GetHP(){
+int Magician::GetHP()
+{
     return hp;
-    itemCnt = 0 ; 
 }
 
-// 아이템 증가 함수
-void User::IncreaseItem(){
+void Magician::IncreaseItem()
+{
     itemCnt = itemCnt + 1;
 }
 
-// 연산자 중복 정의
-ostream& operator<<(ostream& os, const User& user) {
-    os << "현재 HP는 " << user.hp << " 이고, 먹은 아이템은 총 " << user.itemCnt << "개 입니다";
-    return os;
+int Magician::GetItemCount()
+{
+    return itemCnt;
 }
 
-// 공격 함수
-void User::doAttack(){
-    cout << "공격합니다" ;
+void Magician::doAttack()
+{
+    cout << "마법 사용" << endl;
+}
+
+Warrior::Warrior()
+{
+    hp = 20;
+    itemCnt = 0;
+}
+
+void Warrior::IncreaseHP(int inc_hp)
+{
+    hp = hp + inc_hp;
+}
+
+void Warrior::DecreaseHP(int dec_hp)
+{
+    hp = hp - dec_hp;
+}
+
+int Warrior::GetHP()
+{
+    return hp;
+}
+
+void Warrior::IncreaseItem()
+{
+    itemCnt = itemCnt + 1;
+}
+
+int Warrior::GetItemCount()
+{
+    return itemCnt;
+}
+
+void Warrior::doAttack()
+{
+    cout << "베기 사용" << endl;
+}
+
+ostream &operator<<(ostream &os, User &user)
+{
+    os << "현재 HP는 " << user.GetHP()
+       << " 이고, 먹은 아이템은 총 "
+       << user.GetItemCount() << "개 입니다";
+    return os;
 }

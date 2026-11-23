@@ -17,10 +17,7 @@ bool checkGoal(vector<vector<int>> &map, int user_x, int user_y);
 void checkState(vector<vector<int>> &map, int user_x, int user_y, User &user);
 
 // User 객체를 넣으면 hp가 0인지 체크하고, 0이라면 false를 반환, 그렇지 않다면 true를 반환
-bool CheckUser(User user);
-
-// Magician과 Warrior가 번갈아 가며 게임
-int Order = 0;
+bool CheckUser(User &user);
 
 // 메인 함수
 int main()
@@ -33,29 +30,39 @@ int main()
         {0, 2, 3, 0, 0},
         {3, 0, 0, 0, 2}};
 
-    // 객체 생성
-    Magician magician;
-    Warrior warrior;
+    int choice;
+    cout << "직업 선택 (1. 마법사, 2. 전사): ";
 
-    int k = 0;
-    // 유저의 위치를 저장할 변수
-    int user_x = 0; // 가로 번호
-    int user_y = 0; // 세로 번호
+    if (!(cin >> choice))
+    {
+        cout << "숫자를 입력하세요." << endl;
+        return 0;
+    }
+
+    User *user = nullptr;
+
+    if (choice == 1)
+    {
+        user = new Magician();
+    }
+    else if (choice == 2)
+    {
+        user = new Warrior();
+    }
+    else
+    {
+        cout << "잘못된 선택입니다." << endl;
+        return 0;
+    }
+
+    int user_x = 0;
+    int user_y = 0;
+
     while (1)
     { // 사용자에게 계속 입력받기 위해 무한 루프
-        // 번갈아 가기
-        if (k == 0)
-        {
-            cout << "Warrior -> " << endl;
-            cout << "현재 HP: " << warrior.GetHP() << endl;
-            warrior.doAttack();
-        }
-        else
-        {
-            cout << "Magician -> " << endl;
-            cout << "현재 HP: " << magician.GetHP() << endl;
-            magician.doAttack();
-        }
+      // 번갈아 가기
+        cout << "현재 HP: " << user->GetHP() << endl;
+        user->doAttack();
 
         // 사용자의 입력을 저장할 변수
         string user_input = "";
@@ -77,23 +84,11 @@ int main()
                 cout << "위로 한 칸 올라갑니다." << endl;
                 displayMap(map, user_x, user_y);
 
-                if (k == 0)
-                {
-                    warrior.DecreaseHP(1);
+                user->DecreaseHP(1);
 
-                    if (CheckUser(warrior)) // hp != 0 이면 실행
-                    {
-                        checkState(map, user_x, user_y, warrior);
-                    }
-                }
-                else
+                if (CheckUser(*user))
                 {
-                    magician.DecreaseHP(1);
-
-                    if (CheckUser(magician))
-                    {
-                        checkState(map, user_x, user_y, magician);
-                    }
+                    checkState(map, user_x, user_y, *user);
                 }
             }
         }
@@ -112,23 +107,11 @@ int main()
                 cout << "위로 한 칸 내려갑니다." << endl;
                 displayMap(map, user_x, user_y);
 
-                if (k == 0)
-                {
-                    warrior.DecreaseHP(1);
+                user->DecreaseHP(1);
 
-                    if (CheckUser(warrior))
-                    {
-                        checkState(map, user_x, user_y, warrior);
-                    }
-                }
-                else
+                if (CheckUser(*user))
                 {
-                    magician.DecreaseHP(1);
-
-                    if (CheckUser(magician))
-                    {
-                        checkState(map, user_x, user_y, magician);
-                    }
+                    checkState(map, user_x, user_y, *user);
                 }
             }
         }
@@ -148,23 +131,11 @@ int main()
                 cout << "왼쪽으로 이동합니다." << endl;
                 displayMap(map, user_x, user_y);
 
-                if (k == 0)
-                {
-                    warrior.DecreaseHP(1);
+                user->DecreaseHP(1);
 
-                    if (CheckUser(warrior))
-                    {
-                        checkState(map, user_x, user_y, warrior);
-                    }
-                }
-                else
+                if (CheckUser(*user))
                 {
-                    magician.DecreaseHP(1);
-
-                    if (CheckUser(magician))
-                    {
-                        checkState(map, user_x, user_y, magician);
-                    }
+                    checkState(map, user_x, user_y, *user);
                 }
             }
         }
@@ -183,23 +154,11 @@ int main()
                 cout << "오른쪽으로 이동합니다." << endl;
                 displayMap(map, user_x, user_y);
 
-                if (k == 0)
-                {
-                    warrior.DecreaseHP(1);
+                user->DecreaseHP(1);
 
-                    if (CheckUser(warrior))
-                    {
-                        checkState(map, user_x, user_y, warrior);
-                    }
-                }
-                else
+                if (CheckUser(*user))
                 {
-                    magician.DecreaseHP(1);
-
-                    if (CheckUser(magician))
-                    {
-                        checkState(map, user_x, user_y, magician);
-                    }
+                    checkState(map, user_x, user_y, *user);
                 }
             }
         }
@@ -209,14 +168,7 @@ int main()
         }
         else if (user_input == "정보")
         {
-            if (k == 0)
-            {
-                cout << warrior << endl;
-            }
-            else
-            {
-                cout << magician << endl;
-            }
+            cout << *user << endl;
         }
         else if (user_input == "종료")
         {
@@ -229,8 +181,7 @@ int main()
             continue;
         }
 
-        if ((k == 0 && CheckUser(warrior) == false) ||
-            (k == 1 && CheckUser(magician) == false))
+        if (CheckUser(*user) == false)
         {
             cout << "HP가 0이하가 되었습니다. 실패했습니다. " << endl;
             cout << "게임을 종료합니다." << endl;
@@ -245,9 +196,8 @@ int main()
             cout << "게임을 종료합니다." << endl;
             break;
         }
-
-        k = (k + 1) % 2;
     }
+    delete user;
     return 0;
 }
 
@@ -344,7 +294,7 @@ void checkState(vector<vector<int>> &map, int user_x, int user_y, User &user)
 }
 
 // bool CheckUser(User user) 함수 생성: User 객체를 넣으면 hp가 0인지 체크하고, 0이라면 false를 반환, 그렇지 않다면 true를 반환
-bool CheckUser(User user)
+bool CheckUser(User &user)
 {
     if (user.GetHP() <= 0)
     {
