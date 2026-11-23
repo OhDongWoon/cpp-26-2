@@ -3,6 +3,7 @@
 #include "user.h"
 #include <vector>
 using namespace std;
+using namespace mud2;
 
 const int mapX = 5;
 const int mapY = 5;

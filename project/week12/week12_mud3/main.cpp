@@ -1,9 +1,9 @@
-
 #include <iostream>
 #include <string>
 #include "user.h"
 #include <vector>
 using namespace std;
+using namespace mud3;
 
 const int mapX = 5;
 const int mapY = 5;

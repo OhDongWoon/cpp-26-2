@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "user.h"
+using namespace mud1;
 using namespace std;
 
 const int mapX = 5;
